@@ -21,9 +21,12 @@ target/
 .springBeans
 .sts4-cache
 
+<<<<<<< HEAD
 ### Property Files ###
 *.properties
 
+=======
+>>>>>>> 78aec62e4e9453ff14934a49dded4ad70b43431a
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
