@@ -35,7 +35,7 @@ public class DataCacheService {
 	@Scheduled(cron = "0 0 0 * * ?") // Run daily at midnight
 	private void refreshData() {
 		LOGGER.info("Running data cache refresh operation");
-
+		int apiCalls = 0;
 
 
 		for (CacheEndpoints endpoint : CacheEndpoints.values()) {
@@ -44,12 +44,13 @@ public class DataCacheService {
 			List<Object> combinedData = new ArrayList<>();
 			int fetchedCount;
 			int skippedCount = 0;
-			int apiCalls = 0;
+
 
 			try {
 				do {
-					if (apiCalls % 25 == 0) {
-						LOGGER.info("Sleeping for 2min to avoid hitting rate limit");
+					if (apiCalls > 0 && apiCalls % 25 == 0) {
+						LOGGER.warn("API Count hit threshold. Total Count: " + apiCalls);
+						LOGGER.warn("Sleeping for 2min to avoid hitting rate limit");
 						Thread.sleep(120000);
 					}
 
@@ -60,7 +61,6 @@ public class DataCacheService {
 							+ skippedCount,
 							CacheTransportResponse.class);
 					apiCalls += 1;
-					// do something to verify fetchresult size
 
 					if (fetchResult.getValue() != null && !fetchResult.getValue().isEmpty()) {
 						fetchedCount = fetchResult.getValue().size();
@@ -93,6 +93,7 @@ public class DataCacheService {
 
 		}
 		LOGGER.info("Data cache refresh complete");
+		LOGGER.error("API Count: " + apiCalls);
 	}
 
 	public List<Object> getDataByKey(String keyName) {
