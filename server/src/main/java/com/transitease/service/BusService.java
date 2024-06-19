@@ -14,42 +14,37 @@ public class BusService {
 	@Qualifier("transportApiService")
 	private TransportApiService transportApiService;
 
-	public Object getBusServiceDetails(String serviceNumber) {
-		String urlTemplate = "/BusServices?{0}";
-		String endpointAndParamString = MessageFormat.format(urlTemplate, serviceNumber);
+	@Autowired
+	@Qualifier("dataCacheService")
+	private DataCacheService dataCacheService;
 
-		return transportApiService.makeGetRequest(endpointAndParamString);
+	public Object getBusServiceDetails(String serviceNumber) {
+		return dataCacheService.getDataByKey(CacheEndpoints.BUS_SERVICES.getEndpoint());
 	}
 
 	public Object getBusRouteDetails(String serviceNumber) {
-		String urlTemplate = "/BusRoutes?{0}";
-		String endpointAndParamString = MessageFormat.format(urlTemplate, serviceNumber);
-
-		return transportApiService.makeGetRequest(endpointAndParamString);
+		return dataCacheService.getDataByKey(CacheEndpoints.BUS_ROUTES.getEndpoint());
 	}
+
+	public Object getBusStopDetails(String busStopCode) {
+		return dataCacheService.getDataByKey(CacheEndpoints.BUS_STOPS.getEndpoint());
+	}
+
 
 	public Object getBusArrivalTime(String busStopCode, String serviceNumber) {
 
 		String urlTemplate = "/BusArrivalv2?BusStopCode={0}&ServiceNo={1}";
 		String endpointAndParamString = MessageFormat.format(urlTemplate, busStopCode, serviceNumber);
 
-		return transportApiService.makeGetRequest(endpointAndParamString);
+		return transportApiService.makeGetRequest(endpointAndParamString, Object.class);
 	}
-
-	public Object getBusStopDetails(String busStopCode) {
-		String urlTemplate = "/BusStops?{0}";
-		String endpointAndParamString = MessageFormat.format(urlTemplate, busStopCode);
-
-		return transportApiService.makeGetRequest(endpointAndParamString);
-	}
-
 
 	public Object getArrivalsAtBusStop(String busStopCode) {
 
 		String urlTemplate = "/BusArrivalv2?BusStopCode={0}";
 		String endpointAndParamString = MessageFormat.format(urlTemplate, busStopCode);
 
-		return transportApiService.makeGetRequest(endpointAndParamString);
+		return transportApiService.makeGetRequest(endpointAndParamString, Object.class);
 	}
 
 

@@ -15,7 +15,7 @@ public class TrainService {
 	public Object getTrainServiceAlerts() {
 		String urlTemplate = "/TrainServiceAlerts";
 
-		return transportApiService.makeGetRequest(urlTemplate);
+		return transportApiService.makeGetRequest(urlTemplate, Object.class);
 	}
 
 }

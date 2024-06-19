@@ -29,7 +29,7 @@ public class TransportApiService {
 
 	private static final Logger LOGGER = LogManager.getLogger(TransportApiService.class);
 
-	public Object makeGetRequest(String endpointAndParamString) {
+	public Object makeGetRequest(String endpointAndParamString, Class<?> responseClazz) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("AccountKey", transportApiKey);
@@ -39,21 +39,14 @@ public class TransportApiService {
 		LOGGER.info("url making request to: " + transportApiUrl + endpointAndParamString);
 
 
-		ResponseEntity<Object> response = restTemplateObject.exchange(
+		ResponseEntity<?> response = restTemplateObject.exchange(
 			transportApiUrl + endpointAndParamString,
 			HttpMethod.GET,
 			entity,
-			Object.class
+			responseClazz
 		);
 
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			LOGGER.info(mapper.writeValueAsString(response));
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
-
-		LOGGER.info(response);
+		LOGGER.info("Status code of operation: " + response.getStatusCode());
 
 
 		return response.getBody();

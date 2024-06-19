@@ -11,13 +11,11 @@ import java.text.MessageFormat;
 public class TaxiService {
 
 	@Autowired
-	@Qualifier("transportApiService")
-	private TransportApiService transportApiService;
+	@Qualifier("dataCacheService")
+	private DataCacheService dataCacheService;
 
 	public Object getListOfTaxiStands() {
-		String urlTemplate = "/TaxiStands";
-
-		return transportApiService.makeGetRequest(urlTemplate);
+		return dataCacheService.getDataByKey(CacheEndpoints.TAXI_STANDS.getEndpoint());
 	}
 
 }
