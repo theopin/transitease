@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,28 +18,30 @@ import org.springframework.web.client.RestTemplate;
 @Service("transportApiService")
 public class TransportApiService {
 
+	@Value("${transport.api.url}")
+	private String transportApiUrl;
 
-	private static final Logger LOGGER = LogManager.getLogger(TransportApiService.class);
-
-	private static final String TRANSPORT_API_URL = "ht";
-	private static final String TRANSPORT_API_KEY = "u";
+	@Value("${transport.api.key}")
+	private String transportApiKey;
 
 	@Autowired
 	@Qualifier("restTemplateBean")
 	private RestTemplate restTemplateObject;
 
+	private static final Logger LOGGER = LogManager.getLogger(TransportApiService.class);
+
 	public Object makeGetRequest(String endpointAndParamString) {
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("AccountKey", TRANSPORT_API_KEY);
+		headers.set("AccountKey", transportApiKey);
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
-		LOGGER.info("url making request to: " + TRANSPORT_API_URL + endpointAndParamString);
+		LOGGER.info("url making request to: " + transportApiUrl + endpointAndParamString);
 
 
 		ResponseEntity<Object> response = restTemplateObject.exchange(
-			TRANSPORT_API_URL + endpointAndParamString,
+			transportApiUrl + endpointAndParamString,
 			HttpMethod.GET,
 			entity,
 			Object.class
