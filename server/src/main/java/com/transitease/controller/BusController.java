@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/bus")
+@RequestMapping("/buses")
 public class BusController {
 
     private static final Logger LOGGER = LogManager.getLogger(BusController.class);
