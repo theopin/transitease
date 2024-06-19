@@ -11,13 +11,11 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const endpoint = "/BusArrivalv2"
-        const params = { 
-          BusStopCode: 83139,
-          ServiceNo: 15
-        };
+        const endpoint = "/buses/services/details/66"
+        const params = {};
 
         const response = await TransportApi.makeServiceRequest(endpoint, params);
+        console.log(response.data);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
