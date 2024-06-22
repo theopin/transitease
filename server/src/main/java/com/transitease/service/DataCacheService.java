@@ -48,12 +48,6 @@ public class DataCacheService {
 
 			try {
 				do {
-					if (apiCalls > 0 && apiCalls % 25 == 0) {
-						LOGGER.warn("API Count hit threshold. Total Count: " + apiCalls);
-						LOGGER.warn("Sleeping for 2min to avoid hitting rate limit");
-						Thread.sleep(120000);
-					}
-
 					CacheTransportResponse fetchResult = (CacheTransportResponse) transportApiService
 						.makeGetRequest("/"
 							+ iteratedEndpoint
@@ -65,9 +59,13 @@ public class DataCacheService {
 					if (fetchResult.getValue() != null && !fetchResult.getValue().isEmpty()) {
 						fetchedCount = fetchResult.getValue().size();
 						LOGGER.info("FetchResult Count: " + fetchedCount);
-
-
 						combinedData.addAll(fetchResult.getValue());
+
+						if (skippedCount == 0 &&  fetchedCount < 500) {
+							LOGGER.info("Fetched less than 500 records in first run. Ending.");
+							break;
+						}
+
 						skippedCount += 500;
 					} else {
 						fetchedCount = 0;
@@ -93,7 +91,7 @@ public class DataCacheService {
 
 		}
 		LOGGER.info("Data cache refresh complete");
-		LOGGER.error("API Count: " + apiCalls);
+		LOGGER.info("API Count: " + apiCalls);
 	}
 
 	public List<Object> getDataByKey(String keyName) {
