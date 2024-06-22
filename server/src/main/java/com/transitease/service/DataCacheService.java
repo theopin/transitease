@@ -61,17 +61,12 @@ public class DataCacheService {
 						LOGGER.info("FetchResult Count: " + fetchedCount);
 						combinedData.addAll(fetchResult.getValue());
 
-						if (skippedCount == 0 &&  fetchedCount < 500) {
-							LOGGER.info("Fetched less than 500 records in first run. Ending.");
-							break;
-						}
-
 						skippedCount += 500;
 					} else {
 						fetchedCount = 0;
 					}
 
-				} while (fetchedCount != 0);
+				} while (fetchedCount == 500);
 
 				LOGGER.info(MessageFormat.format("Skip and Final count for {0}: {1} skip, {2} final",
 					iteratedEndpoint,
