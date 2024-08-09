@@ -22,7 +22,7 @@ public class BusService {
 	@Qualifier("dataCacheService")
 	private DataCacheService dataCacheService;
 
-	private ObjectMapper busObjectMapper = new ObjectMapper();
+	private final ObjectMapper busObjectMapper = new ObjectMapper();
 
 	private static final Logger LOGGER = LogManager.getLogger(BusService.class);
 
