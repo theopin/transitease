@@ -11,8 +11,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service("transportApiService")
 public class TransportApiService {
@@ -29,7 +32,8 @@ public class TransportApiService {
 
 	private static final Logger LOGGER = LogManager.getLogger(TransportApiService.class);
 
-	public Object makeGetRequest(String endpointAndParamString, Class<?> responseClazz) {
+	@Async("apiTaskExecutor")
+	public CompletableFuture<Object> makeGetRequest(String endpointAndParamString, Class<?> responseClazz) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("AccountKey", transportApiKey);
@@ -49,7 +53,7 @@ public class TransportApiService {
 		LOGGER.info("Status code of operation: " + response.getStatusCode());
 
 
-		return response.getBody();
+		return CompletableFuture.completedFuture(response.getBody());
 	}
 
 }

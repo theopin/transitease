@@ -14,11 +14,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @Service("dataCacheService")
-@EnableScheduling
 public class DataCacheService {
 
 	private static final Logger LOGGER = LogManager.getLogger(DataCacheService.class);
@@ -44,12 +44,14 @@ public class DataCacheService {
 
 			try {
 				do {
-					CacheTransportResponse fetchResult = (CacheTransportResponse) transportApiService
+					CacheTransportResponse fetchResult = (CacheTransportResponse)  transportApiService
 						.makeGetRequest("/"
 							+ iteratedEndpoint
 							+ "?$skip="
 							+ skippedCount,
-							CacheTransportResponse.class);
+							CacheTransportResponse.class)
+						.get();
+
 					apiCalls += 1;
 
 					if (fetchResult.getValue() != null && !fetchResult.getValue().isEmpty()) {
