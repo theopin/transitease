@@ -14,7 +14,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,7 +21,7 @@ import java.util.concurrent.ConcurrentMap;
 public class DataCacheService {
 
 	private static final Logger LOGGER = LogManager.getLogger(DataCacheService.class);
-	private static final ConcurrentMap<String, List<Object>> dataCache = new ConcurrentHashMap<>();;
+	private static final ConcurrentMap<String, List<Object>> dataCache = new ConcurrentHashMap<>();
 
 	@Autowired
 	@Qualifier("transportApiService")
