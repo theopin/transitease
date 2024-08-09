@@ -1,6 +1,10 @@
 package com.transitease.controller;
 
 
+import com.transitease.dto.bus.arrival.BusServiceArrivalDTO;
+import com.transitease.dto.bus.service.BusRouteDTO;
+import com.transitease.dto.bus.service.BusServiceDTO;
+import com.transitease.dto.bus.service.BusStopDTO;
 import com.transitease.service.BusArrivalService;
 import com.transitease.service.BusService;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -36,21 +41,21 @@ public class BusController {
 
 
     @GetMapping("/services/details/{serviceNumber}")
-    public Object getBusServiceDetails(@PathVariable("serviceNumber") String serviceNumber) {
+    public List<BusServiceDTO> getBusServiceDetails(@PathVariable("serviceNumber") String serviceNumber) {
         LOGGER.info("service: " + serviceNumber);
 
         return busServiceObject.getBusServiceDetails(serviceNumber);
     }
 
     @GetMapping("/services/routes/{serviceNumber}")
-    public Object getBusRouteDetails(@PathVariable("serviceNumber") String serviceNumber) {
+    public List<BusRouteDTO> getBusRouteDetails(@PathVariable("serviceNumber") String serviceNumber) {
         LOGGER.info("service: " + serviceNumber);
 
         return busServiceObject.getBusRouteDetails(serviceNumber);
     }
 
     @GetMapping("/stops/details/{stopCode}")
-    public Object getBusStopDetails(@PathVariable("stopCode") String stopCode) {
+    public List<BusStopDTO> getBusStopDetails(@PathVariable("stopCode") String stopCode) {
         LOGGER.info("busStopCode: " + stopCode);
 
         return busServiceObject.getBusStopDetails(stopCode);
@@ -58,8 +63,9 @@ public class BusController {
     }
 
     @GetMapping("/services/arrivals/{serviceNumber}")
-    public Object getBusArrivalTime(@RequestParam("busStopCode") String busStopCode,
-                                    @PathVariable("serviceNumber") String serviceNumber) throws ExecutionException, InterruptedException {
+    public BusServiceArrivalDTO getBusArrivalTime(@RequestParam("busStopCode") String busStopCode,
+                                                  @PathVariable("serviceNumber") String serviceNumber)
+            throws ExecutionException, InterruptedException {
         LOGGER.info("busStopCode: " + busStopCode);
         LOGGER.info("service: " + serviceNumber);
 
@@ -68,7 +74,8 @@ public class BusController {
 
 
     @GetMapping("/stops/arrivals/{stopCode}")
-    public Object getArrivalsAtBusStop(@PathVariable("stopCode") String stopCode) {
+    public BusServiceArrivalDTO getArrivalsAtBusStop(@PathVariable("stopCode") String stopCode)
+            throws ExecutionException, InterruptedException {
         LOGGER.info("busStopCode: " + stopCode);
 
         return busArrivalServiceObject.getArrivalsAtBusStop(stopCode);

@@ -25,12 +25,14 @@ public class BusArrivalService {
 			.makeGetRequest(endpointAndParamString, BusServiceArrivalDTO.class).get();
 	}
 
-	public Object getArrivalsAtBusStop(String busStopCode) {
+	public BusServiceArrivalDTO getArrivalsAtBusStop(String busStopCode)
+			throws ExecutionException, InterruptedException {
 
 		String urlTemplate = "/BusArrivalv2?BusStopCode={0}";
 		String endpointAndParamString = MessageFormat.format(urlTemplate, busStopCode);
 
-		return transportApiService.makeGetRequest(endpointAndParamString, Object.class);
+		return (BusServiceArrivalDTO) transportApiService
+			.makeGetRequest(endpointAndParamString, BusServiceArrivalDTO.class).get();
 	}
 
 
