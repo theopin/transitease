@@ -1,4 +1,4 @@
-package com.transitease.service.response;
+package com.transitease.dto.response;
 
 import lombok.Data;
 

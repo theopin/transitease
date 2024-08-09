@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutionException;
+
 
 @RestController
 @RequestMapping("/buses")
@@ -57,7 +59,7 @@ public class BusController {
 
     @GetMapping("/services/arrivals/{serviceNumber}")
     public Object getBusArrivalTime(@RequestParam("busStopCode") String busStopCode,
-                                    @PathVariable("serviceNumber") String serviceNumber) {
+                                    @PathVariable("serviceNumber") String serviceNumber) throws ExecutionException, InterruptedException {
         LOGGER.info("busStopCode: " + busStopCode);
         LOGGER.info("service: " + serviceNumber);
 

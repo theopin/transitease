@@ -1,8 +1,7 @@
 package com.transitease.service;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.transitease.dto.BusServiceDTO;
+import com.transitease.dto.bus.service.BusServiceDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
