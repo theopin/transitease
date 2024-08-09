@@ -11,10 +11,6 @@ import java.text.MessageFormat;
 public class BusService {
 
 	@Autowired
-	@Qualifier("transportApiService")
-	private TransportApiService transportApiService;
-
-	@Autowired
 	@Qualifier("dataCacheService")
 	private DataCacheService dataCacheService;
 
@@ -29,23 +25,5 @@ public class BusService {
 	public Object getBusStopDetails(String busStopCode) {
 		return dataCacheService.getDataByKey(CacheEndpoints.BUS_STOPS.getEndpoint());
 	}
-
-
-	public Object getBusArrivalTime(String busStopCode, String serviceNumber) {
-
-		String urlTemplate = "/BusArrivalv2?BusStopCode={0}&ServiceNo={1}";
-		String endpointAndParamString = MessageFormat.format(urlTemplate, busStopCode, serviceNumber);
-
-		return transportApiService.makeGetRequest(endpointAndParamString, Object.class);
-	}
-
-	public Object getArrivalsAtBusStop(String busStopCode) {
-
-		String urlTemplate = "/BusArrivalv2?BusStopCode={0}";
-		String endpointAndParamString = MessageFormat.format(urlTemplate, busStopCode);
-
-		return transportApiService.makeGetRequest(endpointAndParamString, Object.class);
-	}
-
 
 }

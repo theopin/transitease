@@ -1,6 +1,7 @@
 package com.transitease.controller;
 
 
+import com.transitease.service.BusArrivalService;
 import com.transitease.service.BusService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +28,10 @@ public class BusController {
     @Qualifier("busService")
     private BusService busServiceObject;
 
+    @Autowired
+    @Qualifier("busArrivalService")
+    private BusArrivalService busArrivalServiceObject;
+
 
     @GetMapping("/services/details/{serviceNumber}")
     public Object getBusServiceDetails(@PathVariable("serviceNumber") String serviceNumber) {
@@ -42,15 +47,6 @@ public class BusController {
         return busServiceObject.getBusRouteDetails(serviceNumber);
     }
 
-    @GetMapping("/services/arrivals/{serviceNumber}")
-    public Object getBusArrivalTime(@RequestParam("busStopCode") String busStopCode,
-                                    @PathVariable("serviceNumber") String serviceNumber) {
-        LOGGER.info("busStopCode: " + busStopCode);
-        LOGGER.info("service: " + serviceNumber);
-
-        return busServiceObject.getBusArrivalTime(busStopCode, serviceNumber);
-    }
-
     @GetMapping("/stops/details/{stopCode}")
     public Object getBusStopDetails(@PathVariable("stopCode") String stopCode) {
         LOGGER.info("busStopCode: " + stopCode);
@@ -59,11 +55,21 @@ public class BusController {
 
     }
 
+    @GetMapping("/services/arrivals/{serviceNumber}")
+    public Object getBusArrivalTime(@RequestParam("busStopCode") String busStopCode,
+                                    @PathVariable("serviceNumber") String serviceNumber) {
+        LOGGER.info("busStopCode: " + busStopCode);
+        LOGGER.info("service: " + serviceNumber);
+
+        return busArrivalServiceObject.getBusArrivalTime(busStopCode, serviceNumber);
+    }
+
+
     @GetMapping("/stops/arrivals/{stopCode}")
     public Object getArrivalsAtBusStop(@PathVariable("stopCode") String stopCode) {
         LOGGER.info("busStopCode: " + stopCode);
 
-        return busServiceObject.getArrivalsAtBusStop(stopCode);
+        return busArrivalServiceObject.getArrivalsAtBusStop(stopCode);
 
     }
 }

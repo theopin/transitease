@@ -1,7 +1,5 @@
 package com.transitease.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class TransportApiService {
 	private String transportApiKey;
 
 	@Autowired
-	@Qualifier("restTemplateBean")
+	@Qualifier("restTemplate")
 	private RestTemplate restTemplateObject;
 
 	private static final Logger LOGGER = LogManager.getLogger(TransportApiService.class);
