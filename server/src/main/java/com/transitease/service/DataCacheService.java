@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @Service("dataCacheService")
+@EnableScheduling
 public class DataCacheService {
 
 	private static final Logger LOGGER = LogManager.getLogger(DataCacheService.class);
@@ -26,13 +28,7 @@ public class DataCacheService {
 	@Qualifier("transportApiService")
 	private TransportApiService transportApiService;
 
-	@PostConstruct
-	private void initializeDataCache() {
-		LOGGER.info("Initializing cache with data");
-		refreshData();
-	}
-
-	@Scheduled(cron = "0 0 0 * * ?") // Run daily at midnight
+	@Scheduled(fixedDelay = 43200000) // Run 12 hours after the previous execution completes
 	private void refreshData() {
 		LOGGER.info("Running data cache refresh operation");
 		int apiCalls = 0;
