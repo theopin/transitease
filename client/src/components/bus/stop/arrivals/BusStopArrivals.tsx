@@ -5,53 +5,10 @@ import { TileLayer } from 'react-leaflet/TileLayer';
 import { Popup } from 'react-leaflet/Popup';
 import { Marker } from 'react-leaflet/Marker';
 
+import { BusArrivalInfo, BusLoad, BusType } from './BusStyles'; // Adjust the path as needed
+
 import { TransportApi } from '../../../../api/TransportApi';
 
-interface NextBusInfo {
-  OriginCode: string;
-  DestinationCode: string;
-  EstimatedArrival: string; // Consider using Date if parsing is needed
-  Latitude: string;
-  Longitude: string;
-  Load: keyof typeof BusLoad;
-  Type: keyof typeof BusType;
-  Feature: keyof typeof PublicTransportFeature;
-  VisitNumber: string;
-}
-
-interface BusArrivalInfo {
-  NextBus: NextBusInfo;
-  NextBus2: NextBusInfo;
-  NextBus3: NextBusInfo;
-  Operator: keyof typeof PublicTransportOperator;
-  ServiceNo: string;
-}
-
-enum PublicTransportOperator {
-  SBST = 'SBS Transit',
-  SMRT = 'SMRT Corporation',
-  TTS = 'Tower Transit Singapore',
-  GAS = 'Go Ahead Singapore',
-}
-
-enum PublicTransportFeature {
-  WAB = 'Wheelchair Accessible',
-}
-
-enum BusLoad {
-  SEA = 'Seats Available',
-  SDA = 'Standing Available',
-  LSD = 'Limited Standing',
-  FB = 'Full Bus',
-  UNKNOWN = 'Unknown',
-}
-
-enum BusType {
-  SD = 'Single Deck',
-  DD = 'Double Deck',
-  BD = 'Bendy',
-  UNKNOWN = 'Unknown',
-}
 const BusStopArrivals: any = () => {
   const [data, setData] = useState<BusArrivalInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
