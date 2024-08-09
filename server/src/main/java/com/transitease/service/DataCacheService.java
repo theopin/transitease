@@ -1,12 +1,10 @@
 package com.transitease.service;
 
 import com.transitease.service.response.CacheTransportResponse;
-import jakarta.annotation.PostConstruct;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutionException;
 
 @Service("dataCacheService")
 public class DataCacheService {
@@ -32,7 +31,6 @@ public class DataCacheService {
 		LOGGER.info("Running data cache refresh operation");
 		int apiCalls = 0;
 
-
 		for (CacheEndpoints endpoint : CacheEndpoints.values()) {
 			String iteratedEndpoint = endpoint.getEndpoint();
 
@@ -40,18 +38,9 @@ public class DataCacheService {
 			int fetchedCount;
 			int skippedCount = 0;
 
-
 			try {
 				do {
-					CacheTransportResponse fetchResult = (CacheTransportResponse)  transportApiService
-						.makeGetRequest("/"
-							+ iteratedEndpoint
-							+ "?$skip="
-							+ skippedCount,
-							CacheTransportResponse.class)
-						.get();
-
-					apiCalls += 1;
+					CacheTransportResponse fetchResult = accumulateEndpointDataset(iteratedEndpoint, skippedCount);
 
 					if (fetchResult.getValue() != null && !fetchResult.getValue().isEmpty()) {
 						fetchedCount = fetchResult.getValue().size();
@@ -63,6 +52,7 @@ public class DataCacheService {
 						fetchedCount = 0;
 					}
 
+					apiCalls += 1;
 				} while (fetchedCount == 500);
 
 				LOGGER.info(MessageFormat.format("Skip and Final count for {0}: {1} skip, {2} final",
@@ -70,6 +60,7 @@ public class DataCacheService {
 					String.valueOf(skippedCount),
 					combinedData.size()));
 
+				LOGGER.info(combinedData.get(0));
 				dataCache.put(iteratedEndpoint, combinedData);
 
 
@@ -84,6 +75,17 @@ public class DataCacheService {
 		}
 		LOGGER.info("Data cache refresh complete");
 		LOGGER.info("API Count: " + apiCalls);
+	}
+
+	private CacheTransportResponse accumulateEndpointDataset(String iteratedEndpoint, int skippedCount)
+			throws InterruptedException, ExecutionException {
+		return (CacheTransportResponse)  transportApiService
+			.makeGetRequest("/"
+				+ iteratedEndpoint
+				+ "?$skip="
+				+ skippedCount,
+				CacheTransportResponse.class)
+			.get();
 	}
 
 	public List<Object> getDataByKey(String keyName) {
