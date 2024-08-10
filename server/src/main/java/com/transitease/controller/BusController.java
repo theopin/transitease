@@ -62,6 +62,17 @@ public class BusController {
 
     }
 
+    @GetMapping("/stops/details/nearby")
+    public List<BusStopDTO> getNearbyBusStops(@RequestParam("latitude") double latitude,
+                                              @RequestParam("longitude") double longitude,
+                                              @RequestParam("distance") double maxDistance) {
+        LOGGER.info("lat, long: " + latitude + ", " + longitude);
+
+        return busServiceObject.getBusStopsInRange(latitude, longitude, maxDistance);
+
+    }
+
+
     @GetMapping("/services/arrivals/{serviceNumber}")
     public BusServiceArrivalDTO getBusArrivalTime(@RequestParam("busStopCode") String busStopCode,
                                                   @PathVariable("serviceNumber") String serviceNumber)

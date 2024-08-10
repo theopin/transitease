@@ -25,6 +25,8 @@ public class BusService {
 	private final ObjectMapper busObjectMapper = new ObjectMapper();
 
 	private static final Logger LOGGER = LogManager.getLogger(BusService.class);
+	private final int EARTH_RADIUS = 6371000; // Radius in meters
+
 
 
 	public List<BusServiceDTO> getBusServiceDetails(String serviceNumber) {
@@ -78,4 +80,33 @@ public class BusService {
 
 	}
 
+
+	public List<BusStopDTO> getBusStopsInRange(double latitude, double longitude, double maxDistanceMeters) {
+		List<Object> busStopDataCache = dataCacheService.getDataByKey(CacheEndpoints.BUS_STOPS.getEndpoint());
+		List<BusStopDTO> result = new ArrayList<>();
+
+		for (Object busObject : busStopDataCache) {
+			BusStopDTO busStop = busObjectMapper.convertValue(busObject, BusStopDTO.class);
+
+			double distance = calculateDistance(latitude, longitude, busStop.getLatitude(), busStop.getLongitude());
+
+			if (distance <= maxDistanceMeters) {
+				result.add(busStop);
+			}
+		}
+
+		return result;
+	}
+
+	private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+
+		double latDistance = Math.toRadians(lat2 - lat1);
+		double lonDistance = Math.toRadians(lon2 - lon1);
+		double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+			+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+			* Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+		return EARTH_RADIUS * c;
+	}
 }
