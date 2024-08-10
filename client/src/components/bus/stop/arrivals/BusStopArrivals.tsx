@@ -10,10 +10,30 @@ import { BusArrivalInfo, BusLoad, BusType } from './BusStyles'; // Adjust the pa
 import { TransportApi } from '../../../../api/TransportApi';
 
 const BusStopArrivals: any = () => {
+  const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [data, setData] = useState<BusArrivalInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ lat: latitude, lon: longitude });
+          },
+          (err) => {
+            setError(err.message);
+            setLocation({ lat: 1.3, lon: 103.8 });
+          }
+        );
+      } else {
+        setError("Geolocation is not supported by this browser.");
+        setLocation({ lat: 1.3, lon: 103.8 });
+      }
+    };
+
     const fetchData = async () => {
       try {
         const endpoint = "/buses/stops/arrivals/95019"
@@ -31,6 +51,7 @@ const BusStopArrivals: any = () => {
       }
     };
 
+    getLocation();
     fetchData();
   }, []);
 
@@ -98,7 +119,7 @@ const BusStopArrivals: any = () => {
 
       {data.length > 0 ? (
         <div>
-          <MapContainer center={[1.34, 103.98]} zoom={30} scrollWheelZoom={true} style={{ width: '50%', height: '300px' }}>
+          <MapContainer center={[location.lat, location.lon]} zoom={30} scrollWheelZoom={true} style={{ width: '50%', height: '300px' }}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
