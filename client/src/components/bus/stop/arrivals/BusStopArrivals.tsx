@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { TransportApi } from '../../../../api/TransportApi';
 
 import BusStopMap from './BusStopMap';  
 
-import { TransportApi } from '../../../../api/TransportApi';
 
 const BusStopArrivals: any = () => {
 
