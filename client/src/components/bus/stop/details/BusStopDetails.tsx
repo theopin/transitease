@@ -3,13 +3,10 @@ import React, { useEffect, useState } from 'react';
 
 import { TransportApi } from '../../../../api/TransportApi';
 
-interface BusStopInfo {
-  BusStopCode: string;
-  Description: string;
-  Latitude: number;
-  Longitude: number;
-  RoadName: string;
-}
+
+
+import { BusStopInfo } from './BusStyles'; // Adjust the path as needed
+
 
 const BusStopDetails: any = () => {
   const [data, setData] = useState<BusStopInfo[]>([]);
