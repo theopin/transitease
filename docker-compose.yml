@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+  # transitease-client:
+  #   build: ./client
+  #   container_name: transitease-client
+  #   ports:
+  #     - "3000:3000"
+
+  transitease-server:
+    build: ./server
+    container_name: transitease-server
+    ports:
+      - "8080:8080"
