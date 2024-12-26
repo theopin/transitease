@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 
 import { TransportApi } from '../../../../api/TransportApi';
+import { useParams } from 'react-router-dom';
 
 interface BusRouteStopInfo {
   BusStopCode: string;
@@ -19,13 +20,14 @@ interface BusRouteStopInfo {
 }
 
 const BusServiceRoutes: any = () => {
+  const { service } = useParams<{ service: string }>();
   const [data, setData] = useState<BusRouteStopInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const endpoint = "/buses/services/routes/66"
+            const endpoint = `/buses/services/routes/${service}`
             const params = {};
 
             const response = await TransportApi.makeServiceRequest(endpoint, params);
@@ -38,7 +40,7 @@ const BusServiceRoutes: any = () => {
     };
 
     fetchData();
-  }, []);
+  }, [service]);
 
   return (
     <div className="container mt-5">

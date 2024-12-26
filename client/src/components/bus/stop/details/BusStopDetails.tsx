@@ -6,16 +6,18 @@ import { TransportApi } from '../../../../api/TransportApi';
 
 
 import { BusStopInfo } from './BusStyles'; // Adjust the path as needed
+import { useParams } from 'react-router-dom';
 
 
 const BusStopDetails: any = () => {
+  const { code } = useParams<{ code: string }>();
   const [data, setData] = useState<BusStopInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const endpoint = "/buses/stops/details/431719"
+            const endpoint = `/buses/stops/details/${code}`
             const params = {};
 
             const response = await TransportApi.makeServiceRequest(endpoint, params);
@@ -28,7 +30,7 @@ const BusStopDetails: any = () => {
     };
 
     fetchData();
-  }, []);
+  }, [code]);
 
   return (
     <div className="container mt-5">

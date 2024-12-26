@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react';
 
 import { BusService } from './BusStyles';
 import { TransportApi } from '../../../../api/TransportApi';
+import { useParams } from 'react-router-dom';
 
 
 const BusDetailsDisplay: any = () => {
+  const { service } = useParams<{ service: string }>();
   const [data, setData] = useState<BusService[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const endpoint = "/buses/services/details/66"
+            const endpoint = `/buses/services/details/${service}`
             const params = {};
 
             const response = await TransportApi.makeServiceRequest(endpoint, params);
@@ -24,7 +26,7 @@ const BusDetailsDisplay: any = () => {
     };
 
     fetchData();
-  }, []);
+  }, [service]);
 
   return (
     <div className="container mt-5">
