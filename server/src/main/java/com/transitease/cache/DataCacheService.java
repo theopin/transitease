@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 public class DataCacheService {
 
 	private static final Logger LOGGER = LogManager.getLogger(DataCacheService.class);
-	private static final ConcurrentMap<String, List<Object>> dataCache = new ConcurrentHashMap<>();
+	private static final ConcurrentMap<CacheEndpoint, List<Object>> dataCache = new ConcurrentHashMap<>();
 
 	@Autowired
 	@Qualifier("transportApiService")
@@ -31,7 +31,7 @@ public class DataCacheService {
 		LOGGER.info("Running data cache refresh operation");
 		int apiCalls = 0;
 
-		for (CacheEndpoints endpoint : CacheEndpoints.values()) {
+		for (CacheEndpoint endpoint : CacheEndpoint.values()) {
 			String iteratedEndpoint = endpoint.getEndpoint();
 
 			List<Object> combinedData = new ArrayList<>();
@@ -61,7 +61,7 @@ public class DataCacheService {
 					combinedData.size()));
 
 				LOGGER.info(combinedData.get(0));
-				dataCache.put(iteratedEndpoint, combinedData);
+				dataCache.put(endpoint, combinedData);
 
 
 
@@ -69,7 +69,7 @@ public class DataCacheService {
 				LOGGER.error("Failed to fetch api. putting whatever is fetched for " + iteratedEndpoint, e);
 				LOGGER.error("API Count: " + apiCalls);
 
-				dataCache.put(iteratedEndpoint, combinedData);
+				dataCache.put(endpoint, combinedData);
 			}
 
 		}
@@ -88,7 +88,7 @@ public class DataCacheService {
 			.get();
 	}
 
-	public List<Object> getDataByKey(String keyName) {
+	public List<Object> getDataByKey(CacheEndpoint keyName) {
 		return dataCache.getOrDefault(keyName, new ArrayList<>());
 	}
 }

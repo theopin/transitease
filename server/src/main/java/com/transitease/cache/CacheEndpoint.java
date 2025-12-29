@@ -3,7 +3,7 @@ package com.transitease.cache;
 import lombok.Getter;
 
 @Getter
-public enum CacheEndpoints {
+public enum CacheEndpoint {
 	BUS_SERVICES("BusServices"),
 	BUS_ROUTES("BusRoutes"),
 	BUS_STOPS("BusStops"),
@@ -11,7 +11,7 @@ public enum CacheEndpoints {
 
 	private final String endpoint;
 
-	CacheEndpoints(String endpoint) {
+	CacheEndpoint(String endpoint) {
 		this.endpoint = endpoint;
 	}
 

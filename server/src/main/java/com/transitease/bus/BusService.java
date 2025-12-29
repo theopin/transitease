@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transitease.bus.arrival.BusRouteDTO;
 import com.transitease.bus.service.BusServiceDTO;
 import com.transitease.bus.service.BusStopDTO;
-import com.transitease.cache.CacheEndpoints;
+import com.transitease.cache.CacheEndpoint;
 import com.transitease.cache.DataCacheService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +31,7 @@ public class BusService {
 
 
 	public List<BusServiceDTO> getBusServiceDetails(String serviceNumber) {
-		List<Object> busServiceDataCache = dataCacheService.getDataByKey(CacheEndpoints.BUS_SERVICES.getEndpoint());
+		List<Object> busServiceDataCache = dataCacheService.getDataByKey(CacheEndpoint.BUS_SERVICES);
 
 		List<BusServiceDTO> result = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class BusService {
 
 	public List<BusStopDTO> getBusStopDetails(String busStopCode) {
 
-		List<Object> busStopDataCache = dataCacheService.getDataByKey(CacheEndpoints.BUS_STOPS.getEndpoint());
+		List<Object> busStopDataCache = dataCacheService.getDataByKey(CacheEndpoint.BUS_STOPS);
 
 		List<BusStopDTO> result = new ArrayList<>();
 
@@ -66,7 +66,7 @@ public class BusService {
 	}
 
     public List<BusRouteDTO> getBusRouteDetails(String serviceNumber) {
-        List<Object> busRoutesDataCache = dataCacheService.getDataByKey(CacheEndpoints.BUS_ROUTES.getEndpoint());
+        List<Object> busRoutesDataCache = dataCacheService.getDataByKey(CacheEndpoint.BUS_ROUTES);
 
         List<BusRouteDTO> result = new ArrayList<>();
 
@@ -83,7 +83,7 @@ public class BusService {
 
 
 	public List<BusStopDTO> getBusStopsInRange(double latitude, double longitude, double maxDistanceMeters) {
-		List<Object> busStopDataCache = dataCacheService.getDataByKey(CacheEndpoints.BUS_STOPS.getEndpoint());
+		List<Object> busStopDataCache = dataCacheService.getDataByKey(CacheEndpoint.BUS_STOPS);
 		List<BusStopDTO> result = new ArrayList<>();
 
 		for (Object busObject : busStopDataCache) {
