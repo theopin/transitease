@@ -1,10 +1,11 @@
-package com.transitease.service;
+package com.transitease.bus;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.transitease.dto.bus.service.BusRouteDTO;
-import com.transitease.dto.bus.service.BusServiceDTO;
-import com.transitease.dto.bus.service.BusStopDTO;
+import com.transitease.bus.arrival.BusRouteDTO;
+import com.transitease.bus.service.BusServiceDTO;
+import com.transitease.bus.service.BusStopDTO;
+import com.transitease.service.CacheEndpoints;
+import com.transitease.service.DataCacheService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class BusService {
 	private final ObjectMapper busObjectMapper = new ObjectMapper();
 
 	private static final Logger LOGGER = LogManager.getLogger(BusService.class);
-	private final int EARTH_RADIUS = 6371000; // Radius in meters
+	private static final int EARTH_RADIUS = 6371000; // Radius in meters
 
 
 
@@ -38,26 +39,10 @@ public class BusService {
 			for (Object busObject : busServiceDataCache) {
 				BusServiceDTO busService = busObjectMapper.convertValue(busObject, BusServiceDTO.class);
 
-				if (busService.getServiceNo().equals(serviceNumber)) {
+				if (busService.serviceNo().equals(serviceNumber)) {
 					result.add(busService);
 				}
 			}
-
-		return result;
-	}
-
-	public List<BusRouteDTO> getBusRouteDetails(String serviceNumber) {
-		List<Object> busRoutesDataCache = dataCacheService.getDataByKey(CacheEndpoints.BUS_ROUTES.getEndpoint());
-
-		List<BusRouteDTO> result = new ArrayList<>();
-
-		for (Object busObject : busRoutesDataCache) {
-			BusRouteDTO busRoute = busObjectMapper.convertValue(busObject, BusRouteDTO.class);
-
-			if (busRoute.getServiceNo().equals(serviceNumber)) {
-				result.add(busRoute);
-			}
-		}
 
 		return result;
 	}
@@ -71,7 +56,7 @@ public class BusService {
 		for (Object busObject : busStopDataCache) {
 			BusStopDTO busStop = busObjectMapper.convertValue(busObject, BusStopDTO.class);
 
-			if (busStop.getBusStopCode().equals(busStopCode)) {
+			if (busStop.busStopCode().equals(busStopCode)) {
 				result.add(busStop);
 			}
 		}
@@ -79,6 +64,22 @@ public class BusService {
 		return result;
 
 	}
+
+    public List<BusRouteDTO> getBusRouteDetails(String serviceNumber) {
+        List<Object> busRoutesDataCache = dataCacheService.getDataByKey(CacheEndpoints.BUS_ROUTES.getEndpoint());
+
+        List<BusRouteDTO> result = new ArrayList<>();
+
+        for (Object busObject : busRoutesDataCache) {
+            BusRouteDTO busRoute = busObjectMapper.convertValue(busObject, BusRouteDTO.class);
+
+            if (busRoute.serviceNo().equals(serviceNumber)) {
+                result.add(busRoute);
+            }
+        }
+
+        return result;
+    }
 
 
 	public List<BusStopDTO> getBusStopsInRange(double latitude, double longitude, double maxDistanceMeters) {
@@ -88,7 +89,7 @@ public class BusService {
 		for (Object busObject : busStopDataCache) {
 			BusStopDTO busStop = busObjectMapper.convertValue(busObject, BusStopDTO.class);
 
-			double distance = calculateDistance(latitude, longitude, busStop.getLatitude(), busStop.getLongitude());
+			double distance = calculateDistance(latitude, longitude, busStop.latitude(), busStop.longitude());
 
 			if (distance <= maxDistanceMeters) {
 				result.add(busStop);

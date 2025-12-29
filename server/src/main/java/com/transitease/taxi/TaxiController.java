@@ -1,8 +1,6 @@
-package com.transitease.controller;
+package com.transitease.taxi;
 
 
-import com.transitease.dto.taxi.TaxiStandDTO;
-import com.transitease.service.TaxiService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 
 
 @RestController
-@RequestMapping("/taxis")
+@RequestMapping("/taxi")
 public class TaxiController {
 
     private static final Logger LOGGER = LogManager.getLogger(TaxiController.class);
@@ -33,7 +31,7 @@ public class TaxiController {
     @GetMapping("/stands/{standCode}")
     public List<TaxiStandDTO> getArrivalsAtBusStop(@PathVariable("standCode") String standCode)
         throws ExecutionException, InterruptedException {
-        LOGGER.info("StandCode: " + standCode);
+        LOGGER.info("StandCode: {0}" + standCode);
 
         return taxiServiceObject.getTaxiStandByCode(standCode);
 

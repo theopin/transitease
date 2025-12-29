@@ -1,7 +1,8 @@
-package com.transitease.service;
+package com.transitease.taxi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.transitease.dto.taxi.TaxiStandDTO;
+import com.transitease.service.CacheEndpoints;
+import com.transitease.service.DataCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class TaxiService {
 		List<TaxiStandDTO> result = new ArrayList<>();
 
 		for (Object taxiObject : taxiStandDataCache) {
-			TaxiStandDTO taxiStand = taxiObjectMapper.convertValue(taxiObject, TaxiStandDTO.class);
+            TaxiStandDTO taxiStand = taxiObjectMapper.convertValue(taxiObject, TaxiStandDTO.class);
 
 			result.add(taxiStand);
 		}
@@ -41,10 +42,10 @@ public class TaxiService {
 		List<TaxiStandDTO> result = new ArrayList<>();
 
 		for (Object taxiObject : taxiStandDataCache) {
-			TaxiStandDTO taxiStand = taxiObjectMapper.convertValue(taxiObject, TaxiStandDTO.class);
+            TaxiStandDTO taxiStand = taxiObjectMapper.convertValue(taxiObject, TaxiStandDTO.class);
 
 
-			if (taxiStand.getTaxiCode().equals(standCode)) {
+			if (taxiStand.taxiCode().equals(standCode)) {
 				result.add(taxiStand);
 			}
 

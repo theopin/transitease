@@ -40,12 +40,12 @@ public class DataCacheService {
 
 			try {
 				do {
-					CacheTransportResponse fetchResult = accumulateEndpointDataset(iteratedEndpoint, skippedCount);
+                    CacheTransportResponse fetchResult = accumulateEndpointDataset(iteratedEndpoint, skippedCount);
 
-					if (fetchResult.getValue() != null && !fetchResult.getValue().isEmpty()) {
-						fetchedCount = fetchResult.getValue().size();
+					if (fetchResult.value() != null && !fetchResult.value().isEmpty()) {
+						fetchedCount = fetchResult.value().size();
 						LOGGER.info("FetchResult Count: " + fetchedCount);
-						combinedData.addAll(fetchResult.getValue());
+						combinedData.addAll(fetchResult.value());
 
 						skippedCount += 500;
 					} else {
@@ -84,7 +84,7 @@ public class DataCacheService {
 				+ iteratedEndpoint
 				+ "?$skip="
 				+ skippedCount,
-				CacheTransportResponse.class)
+                    CacheTransportResponse.class)
 			.get();
 	}
 
