@@ -1,4 +1,4 @@
-package com.transitease.service;
+package com.transitease.cache;
 
 import lombok.Getter;
 

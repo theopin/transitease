@@ -1,6 +1,6 @@
-package com.transitease.service;
+package com.transitease.cache;
 
-import com.transitease.dto.response.CacheTransportResponse;
+import com.transitease.api.TransportApiService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

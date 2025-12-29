@@ -1,8 +1,8 @@
 package com.transitease.taxi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.transitease.service.CacheEndpoints;
-import com.transitease.service.DataCacheService;
+import com.transitease.cache.CacheEndpoints;
+import com.transitease.cache.DataCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.transitease.service;
+package com.transitease.api;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,6 +1,6 @@
 package com.transitease.bus.arrival;
 
-import com.transitease.service.TransportApiService;
+import com.transitease.api.TransportApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

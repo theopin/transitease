@@ -1,4 +1,4 @@
-package com.transitease.dto.response;
+package com.transitease.cache;
 
 import java.util.List;
 
