@@ -6,6 +6,7 @@ import com.transitease.bus.service.BusServiceDTO;
 import com.transitease.bus.service.BusStopDTO;
 import com.transitease.cache.CacheEndpoint;
 import com.transitease.cache.DataCacheService;
+import com.transitease.taxi.TaxiStandDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service("busService")
@@ -33,35 +35,21 @@ public class BusService {
 	public List<BusServiceDTO> getBusServiceDetails(String serviceNumber) {
 		List<Object> busServiceDataCache = dataCacheService.getDataByKey(CacheEndpoint.BUS_SERVICES);
 
-		List<BusServiceDTO> result = new ArrayList<>();
+		return busServiceDataCache.stream()
+                .map(busServiceObject -> busObjectMapper.convertValue(busServiceObject, BusServiceDTO.class))
+                .filter(busService -> serviceNumber.equals(busService.serviceNo()))
+                .collect(Collectors.toList());
 
-		// Iterate through the cached data to find the specific bus service
-			for (Object busObject : busServiceDataCache) {
-				BusServiceDTO busService = busObjectMapper.convertValue(busObject, BusServiceDTO.class);
-
-				if (busService.serviceNo().equals(serviceNumber)) {
-					result.add(busService);
-				}
-			}
-
-		return result;
 	}
 
 	public List<BusStopDTO> getBusStopDetails(String busStopCode) {
 
 		List<Object> busStopDataCache = dataCacheService.getDataByKey(CacheEndpoint.BUS_STOPS);
 
-		List<BusStopDTO> result = new ArrayList<>();
-
-		for (Object busObject : busStopDataCache) {
-			BusStopDTO busStop = busObjectMapper.convertValue(busObject, BusStopDTO.class);
-
-			if (busStop.busStopCode().equals(busStopCode)) {
-				result.add(busStop);
-			}
-		}
-
-		return result;
+        return busStopDataCache.stream()
+                .map(busStopObject -> busObjectMapper.convertValue(busStopObject, BusStopDTO.class))
+                .filter(busStop -> busStopCode.equals(busStop.busStopCode()))
+                .collect(Collectors.toList());
 
 	}
 
@@ -70,15 +58,10 @@ public class BusService {
 
         List<BusRouteDTO> result = new ArrayList<>();
 
-        for (Object busObject : busRoutesDataCache) {
-            BusRouteDTO busRoute = busObjectMapper.convertValue(busObject, BusRouteDTO.class);
-
-            if (busRoute.serviceNo().equals(serviceNumber)) {
-                result.add(busRoute);
-            }
-        }
-
-        return result;
+        return busRoutesDataCache.stream()
+                .map(busRouteObject -> busObjectMapper.convertValue(busRouteObject, BusRouteDTO.class))
+                .filter(busRoute -> serviceNumber.equals(busRoute.serviceNo()))
+                .collect(Collectors.toList());
     }
 
 
@@ -86,17 +69,11 @@ public class BusService {
 		List<Object> busStopDataCache = dataCacheService.getDataByKey(CacheEndpoint.BUS_STOPS);
 		List<BusStopDTO> result = new ArrayList<>();
 
-		for (Object busObject : busStopDataCache) {
-			BusStopDTO busStop = busObjectMapper.convertValue(busObject, BusStopDTO.class);
+        return busStopDataCache.stream()
+                .map(busStopObject -> busObjectMapper.convertValue(busStopObject, BusStopDTO.class))
+                .filter(busStop -> calculateDistance(latitude, longitude, busStop.latitude(), busStop.longitude()) <= maxDistanceMeters)
+                .collect(Collectors.toList());
 
-			double distance = calculateDistance(latitude, longitude, busStop.latitude(), busStop.longitude());
-
-			if (distance <= maxDistanceMeters) {
-				result.add(busStop);
-			}
-		}
-
-		return result;
 	}
 
 	private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {

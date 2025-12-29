@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service("taxiService")
@@ -24,15 +25,9 @@ public class TaxiService {
 
 		List<Object> taxiStandDataCache = dataCacheService.getDataByKey(CacheEndpoint.TAXI_STANDS);
 
-		List<TaxiStandDTO> result = new ArrayList<>();
-
-		for (Object taxiObject : taxiStandDataCache) {
-            TaxiStandDTO taxiStand = taxiObjectMapper.convertValue(taxiObject, TaxiStandDTO.class);
-
-			result.add(taxiStand);
-		}
-
-		return result;
+        return taxiStandDataCache.stream()
+                .map(taxiObject -> taxiObjectMapper.convertValue(taxiObject, TaxiStandDTO.class))
+                .collect(Collectors.toList());
 	}
 
 	public List<TaxiStandDTO> getTaxiStandByCode(String standCode) {
@@ -41,17 +36,10 @@ public class TaxiService {
 
 		List<TaxiStandDTO> result = new ArrayList<>();
 
-		for (Object taxiObject : taxiStandDataCache) {
-            TaxiStandDTO taxiStand = taxiObjectMapper.convertValue(taxiObject, TaxiStandDTO.class);
-
-
-			if (taxiStand.taxiCode().equals(standCode)) {
-				result.add(taxiStand);
-			}
-
-		}
-
-		return result;
+        return taxiStandDataCache.stream()
+                .map(taxiObject -> taxiObjectMapper.convertValue(taxiObject, TaxiStandDTO.class))
+                .filter(taxiStand -> standCode.equals(taxiStand.taxiCode()))
+                .collect(Collectors.toList());
 	}
 
 }
